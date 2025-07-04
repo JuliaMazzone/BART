@@ -126,6 +126,17 @@
         $("#bart").bart({
           b: 5,
           s: {
+            bgcol: "#000000", // fondo negro del canvas
+            onload: function () {
+              // cambiar color de texto en capas de canvas
+              setTimeout(() => {
+                ["balnum", "pumpnum", "curearn", "totearn", "popprob", "pumuse"].forEach(layer => {
+                  $("#bart canvas").setLayer(layer, {
+                    fillStyle: "#00ffcc"
+                  }).drawLayers();
+                });
+              }, 100);
+            },
             onend: function () {
               iterationResults.forEach(result => {
                 const now = new Date();
@@ -146,7 +157,7 @@
                   .catch(err => console.error("❌ Error:", err));
               });
 
-              alert("🎉 ¡Gracias por jugar!");
+              alert("🎉 ¡Gracias por participar!");
             }
           }
         });
