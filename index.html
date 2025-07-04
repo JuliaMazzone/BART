@@ -1,72 +1,138 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <title>oBART: Ejemplo con Identificación</title>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <title>BART – Arcade Mode</title>
 
-  <!-- scripts necesarios -->
-  <script type="text/javascript" src="src/jquery-3.0.0.min.js"></script>
-  <script type="text/javascript" src="src/jcanvas.min.js"></script>
-  <script type="text/javascript" src="src/jquery.bart.js"></script>
-  <link rel="stylesheet" type="text/css" href="src/jquery.bart.css" />
+  <!-- Librerías -->
+  <script src="src/jquery-3.0.0.min.js"></script>
+  <script src="src/jcanvas.min.js"></script>
+  <script src="src/jquery.bart.js"></script>
+  <link rel="stylesheet" href="src/jquery.bart.css" />
 
-  <!-- estilo adicional -->
-  <style type="text/css">
-    #intro {
+  <!-- Fuente arcade -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <!-- Estilo Arcade -->
+  <style>
+    body {
+      background: radial-gradient(#1a1a1a, #000000);
+      color: #00ffcc;
+      font-family: 'Press Start 2P', monospace;
+      margin: 0;
+      padding: 0;
       text-align: center;
-      max-width: 600px;
-      margin: 50px auto;
-      font-family: sans-serif;
+    }
+
+    #intro {
+      max-width: 700px;
+      margin: 80px auto;
+      padding: 40px;
+      background-color: #111;
+      border: 4px solid #00ffcc;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #00ffcc;
+    }
+
+    h1, p {
+      color: #00ffcc;
+      margin-bottom: 20px;
     }
 
     input[type="text"] {
-      padding: 10px;
-      font-size: 16px;
-      width: 300px;
+      padding: 14px;
+      width: 80%;
+      font-size: 14px;
+      border: none;
+      background-color: #000;
+      color: #00ffcc;
+      border: 2px solid #00ffcc;
+      border-radius: 6px;
+      font-family: 'Press Start 2P', monospace;
     }
 
     button {
-      padding: 10px 20px;
-      font-size: 16px;
+      background-color: #ff00cc;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 12px;
+      font-family: 'Press Start 2P', monospace;
+      border-radius: 6px;
       margin-top: 20px;
       cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 0 12px #ff00cc;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ff00cc;
+    }
+
+    #bart {
+      margin: 40px auto;
+      max-width: 700px;
+      text-align: center;
+    }
+
+    canvas {
+      background-color: #000 !important;
+      border: 2px solid #00ffcc;
+      border-radius: 10px;
+      box-shadow: 0 0 12px #00ffcc;
+    }
+
+    .BARTinflate, .BARTcashin, .BARTnext {
+      background-color: #00ccff;
+      color: #000;
+      border: none;
+      font-size: 12px;
+      font-family: 'Press Start 2P', monospace;
+      padding: 12px 20px;
+      margin: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 0 12px #00ccff;
+    }
+
+    .BARTinflate:hover, .BARTcashin:hover, .BARTnext:hover {
+      background-color: #00ffff;
+      box-shadow: 0 0 20px #00ffff;
+    }
+
+    .BARTbottom {
+      padding-top: 20px;
     }
   </style>
 
-  <script type="text/javascript">
-    //<![CDATA[
+  <!-- Lógica -->
+  <script>
     let userID = "";
 
     $(document).ready(function () {
       $("#start_btn").click(function () {
         userID = $("#user_id").val().trim();
-
         if (userID === "") {
-          alert("Por favor ingresá un email");
+          alert("🚨 Ingresá un correo o ID para continuar.");
           return;
         }
 
-        // Ocultar pantalla de introducción, mostrar experimento
         $("#intro").hide();
         $("#bart").show();
 
-        // Inicializar BART
         $("#bart").bart({
-          b: 5, // número de globos
+          b: 5,
           s: {
             onend: function () {
-              // Enviar resultados a Sheet.best con el ID ingresado
               iterationResults.forEach(result => {
                 const now = new Date();
                 const fecha = `${now.getFullYear().toString().slice(-2)}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-
                 fetch("https://api.sheetbest.com/sheets/f14be2c3-ad61-4cfe-a44b-05acb934fda5", {
                   method: "POST",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
+                  headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
                     id: result.id,
                     pumps: result.pumps,
@@ -75,35 +141,30 @@
                     Fecha: fecha,
                     user_id: userID
                   })
-                })
-                  .then(res => res.json())
+                }).then(res => res.json())
                   .then(data => console.log("✔️ Enviado:", data))
-                  .catch(err => console.error("❌ Error al enviar:", err));
+                  .catch(err => console.error("❌ Error:", err));
               });
 
-              alert("¡Gracias por participar!");
+              alert("🎉 ¡Gracias por jugar!");
             }
           }
         });
       });
     });
-    //]]>
   </script>
 </head>
 
 <body>
-
-  <!-- 🧠 Pantalla de introducción -->
   <div id="intro">
-    <h1>Bienvenido al experimento de toma de decisiones</h1>
-    <p>Vas a participar en una tarea donde deberás inflar globos y decidir cuándo detenerte antes de que exploten.</p>
-    <p>Por favor, ingresá tu correo electrónico o un identificador único antes de comenzar.</p>
+    <h1>🕹️ BART – Modo Arcade</h1>
+    <p>Inflá el globo, ganá puntos. Pero si explota... ¡Game Over!</p>
+    <p>Ingresá tu ID o correo electrónico para comenzar:</p>
     <input type="text" id="user_id" placeholder="Correo o ID" /><br />
-    <button id="start_btn">Comenzar</button>
+    <button id="start_btn">Start Game</button>
   </div>
 
-  <!-- 🎈 Contenedor del experimento BART -->
-  <div id="bart" style="display: none; margin: auto; text-align: center;"></div>
-
+  <div id="bart" style="display: none;"></div>
 </body>
 </html>
+
