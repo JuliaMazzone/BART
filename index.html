@@ -1,46 +1,109 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-  
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-	<head>
+<head>
+  <title>oBART: Ejemplo con Identificación</title>
+  <meta charset="utf-8" />
 
-	<title>oBART: Example 1</title>
-        
-	<meta charset="utf-8" />
-	
-	<!-- these files are required for the BART to work    -->
-	<script type="text/javascript" src="src/jquery-3.0.0.min.js"></script>	<!-- basic javascript library for dom manipulation -->
-	<script type="text/javascript" src="src/jcanvas.min.js"></script>      	<!-- the canvas plugin -->
-	<script type="text/javascript" src="src/jquery.bart.js"></script>              <!-- the main BART plugin -->
-	<link rel="stylesheet" type="text/css" href="src/jquery.bart.css" />        <!-- additional styles for to make the BART look fancy -->
-        
-	<!-- additional scripts to run the demo on this page -->
-	<script type="text/javascript">
-	//<![CDATA[
-	
-		// initialize the BART after the page has loaded
-		$(document).ready(function() {
-		
-			// create a BART with default values using 10 balloons
-			$("#bart").bart( 2 );
-		});
-	
-	//]]>
-	</script>
-    
-	</head>
-	<body>
+  <!-- scripts necesarios -->
+  <script type="text/javascript" src="src/jquery-3.0.0.min.js"></script>
+  <script type="text/javascript" src="src/jcanvas.min.js"></script>
+  <script type="text/javascript" src="src/jquery.bart.js"></script>
+  <link rel="stylesheet" type="text/css" href="src/jquery.bart.css" />
 
-	<h1 style="text-align:center;">Online Balloon Analogue Risk Task (oBART)</h1>
-	<h2 style="text-align:center;">Example 1</h2>
-                        
-	<!-- load BART here -->
-	<div id="bart" style="margin: auto; text-align: center;"></div>
-        
-		
+  <!-- estilo adicional -->
+  <style type="text/css">
+    #intro {
+      text-align: center;
+      max-width: 600px;
+      margin: 50px auto;
+      font-family: sans-serif;
+    }
 
-       
-	</body>
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+    }
 
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+  </style>
+
+  <script type="text/javascript">
+    //<![CDATA[
+    let userID = "";
+
+    $(document).ready(function () {
+      $("#start_btn").click(function () {
+        userID = $("#user_id").val().trim();
+
+        if (userID === "") {
+          alert("Por favor ingresá un email");
+          return;
+        }
+
+        // Ocultar pantalla de introducción, mostrar experimento
+        $("#intro").hide();
+        $("#bart").show();
+
+        // Inicializar BART
+        $("#bart").bart({
+          b: 5, // número de globos
+          s: {
+            onend: function () {
+              // Enviar resultados a Sheet.best con el ID ingresado
+              iterationResults.forEach(result => {
+                const now = new Date();
+                const fecha = `${now.getFullYear().toString().slice(-2)}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+                fetch("https://api.sheetbest.com/sheets/f14be2c3-ad61-4cfe-a44b-05acb934fda5", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    id: result.id,
+                    pumps: result.pumps,
+                    exploded: result.exploded,
+                    time: result.time,
+                    Fecha: fecha,
+                    user_id: userID
+                  })
+                })
+                  .then(res => res.json())
+                  .then(data => console.log("✔️ Enviado:", data))
+                  .catch(err => console.error("❌ Error al enviar:", err));
+              });
+
+              alert("¡Gracias por participar!");
+            }
+          }
+        });
+      });
+    });
+    //]]>
+  </script>
+</head>
+
+<body>
+
+  <!-- 🧠 Pantalla de introducción -->
+  <div id="intro">
+    <h1>Bienvenido al experimento de toma de decisiones</h1>
+    <p>Vas a participar en una tarea donde deberás inflar globos y decidir cuándo detenerte antes de que exploten.</p>
+    <p>Por favor, ingresá tu correo electrónico o un identificador único antes de comenzar.</p>
+    <input type="text" id="user_id" placeholder="Correo o ID" /><br />
+    <button id="start_btn">Comenzar</button>
+  </div>
+
+  <!-- 🎈 Contenedor del experimento BART -->
+  <div id="bart" style="display: none; margin: auto; text-align: center;"></div>
+
+</body>
 </html>
