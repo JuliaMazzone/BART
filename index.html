@@ -24,7 +24,7 @@
       text-align: center;
     }
 
-    #intro, #final {
+    #intro {
       max-width: 700px;
       margin: 80px auto;
       padding: 40px;
@@ -149,19 +149,9 @@
             },
 
             onend: function () {
-              let totalGanado = 0;
-              let globosExplotados = 0;
-
               iterationResults.forEach(result => {
                 const now = new Date();
                 const fecha = `${now.getFullYear().toString().slice(-2)}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-
-                if (result.exploded === "Yes") {
-                  globosExplotados++;
-                } else {
-                  totalGanado += result.pumps * 0.05;
-                }
-
                 fetch("https://api.sheetbest.com/sheets/f14be2c3-ad61-4cfe-a44b-05acb934fda5", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -178,10 +168,7 @@
                   .catch(err => console.error("❌ Error:", err));
               });
 
-              $("#bart").hide();
-              $("#resumen-ganancia").html(`💰 Ganancia total: <strong>${totalGanado.toFixed(2)} unidades</strong>`);
-              $("#resumen-explosiones").html(`🎈 Globos explotados: <strong>${globosExplotados}</strong>`);
-              $("#final").show();
+              alert("🎉 ¡Gracias por participar!");
             }
           }
         });
@@ -191,8 +178,6 @@
 </head>
 
 <body>
-
-  <!-- Pantalla inicial -->
   <div id="intro">
     <h1>🕹️ BART – Modo Arcade</h1>
     <p>Inflá el globo para ganar puntos. Pero si explota... ¡perdés lo acumulado!</p>
@@ -201,16 +186,7 @@
     <button id="start_btn">Comenzar</button>
   </div>
 
-  <!-- Contenedor del experimento -->
   <div id="bart" style="display: none;"></div>
-
-  <!-- Pantalla final -->
-  <div id="final" style="display: none;">
-    <h1>🎉 ¡Gracias por participar!</h1>
-    <p id="resumen-ganancia"></p>
-    <p id="resumen-explosiones"></p>
-  </div>
-
 </body>
 </html>
 
