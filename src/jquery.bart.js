@@ -161,6 +161,7 @@
             txt_total_earned: 'Total earned: ',              // text for total earnings
             txt_prob_explosion: 'Probability of explosion:', // text for probability of explosion
             txt_pumps_used: 'Max. available pumps used:',    // text for percentage of used pumps
+            user_id: "",  // nuevo parámetro
             onload:    function() {},        // function to run before loading the script 
             
             
@@ -222,6 +223,7 @@
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+        user_id: settings.user_id,
         globo_id: result.id,
         pumps: result.pumps,
         exploded: result.exploded,
