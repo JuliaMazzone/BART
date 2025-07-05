@@ -209,7 +209,7 @@
                     </html>
                 `);
                 newWindow.document.close();
-                const apiURL = "https://api.sheetbest.com/sheets/f14be2c3-ad61-4cfe-a44b-05acb934fda5";
+                const apiURL = "https://api.sheetbest.com/sheets/b7d6fc23-3208-49e7-8d03-c07b3fec1f43";
 
 
                 iterationResults.forEach(result => {
@@ -224,7 +224,7 @@
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            id: result.id,
+                            globo_id: result.id,
                             pumps: result.pumps,
                             exploded: result.exploded,
                             time: result.time,
