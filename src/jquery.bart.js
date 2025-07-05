@@ -219,21 +219,22 @@
 
                     // Enviar los datos a la API
                     fetch(apiURL, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            globo_id: result.id,
-                            pumps: result.pumps,
-                            exploded: result.exploded,
-                            time: result.time,
-                            Fecha: fecha // Agregar el campo Fecha
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(data => console.log("✔️ Enviado:", data))
-                    .catch(err => console.error("❌ Error al enviar:", err));
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        globo_id: result.id,
+        pumps: result.pumps,
+        exploded: result.exploded,
+        time: result.time,
+        Fecha: fecha
+    })
+})
+.then(async res => {
+    console.log("Status:", res.status);
+    const data = await res.json().catch(() => ({}));
+    console.log("Response:", data);
+})
+.catch(err => console.error("❌ Error al enviar:", err));
                 });
             }
         };
