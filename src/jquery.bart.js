@@ -167,6 +167,8 @@
             
             onend: function() {
                 // Mostrar los resultados de todas las iteraciones
+                console.log("⚙️ Finalizando experimento. Datos recopilados:", iterationResults);
+
                 var resultsTable = `
                     <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
                         <thead>
@@ -218,8 +220,17 @@
                     const now = new Date();
                     const fecha = `${now.getFullYear().toString().slice(-2)}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
+                    
                     // Enviar los datos a la API
-                    fetch(apiURL, {
+                    console.log("📤 Enviando a Sheet.best:", {
+  user_id: settings.user_id,
+  globo_id: result.id,
+  pumps: result.pumps,
+  exploded: result.exploded,
+  time: result.time,
+  fecha: fecha
+});
+                    fetch("https://api.sheetbest.com/sheets/b7d6fc23-3208-49e7-8d03-c07b3fec1f43"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
