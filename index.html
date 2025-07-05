@@ -111,8 +111,6 @@
   <!-- Lógica -->
   <script>
     let userID = "";
-    // IMPORTANTE: asegurate de definir iterationResults en el ámbito global
-    let iterationResults = [];
 
     $(document).ready(function () {
       $("#start_btn").click(function () {
@@ -150,26 +148,15 @@
               }, 100);
             },
 
-            // OJO: este callback depende de iterationResults
             onend: function () {
               let totalGanado = 0;
               let globosExplotados = 0;
 
               iterationResults.forEach(result => {
                 const now = new Date();
-                const fecha = `${now.getFullYear().toString().slice(-2)}/${
-                  (now.getMonth() + 1).toString().padStart(2, '0')
-                }/${
-                  now.getDate().toString().padStart(2, '0')
-                } ${
-                  now.getHours().toString().padStart(2, '0')
-                }:${
-                  now.getMinutes().toString().padStart(2, '0')
-                }:${
-                  now.getSeconds().toString().padStart(2, '0')
-                }`;
+                const fecha = `${now.getFullYear().toString().slice(-2)}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
-                if (result.exploded === "Sí") {
+                if (result.exploded === "Yes") {
                   globosExplotados++;
                 } else {
                   totalGanado += result.pumps * 0.05;
@@ -226,3 +213,4 @@
 
 </body>
 </html>
+
