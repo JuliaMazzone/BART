@@ -1,19 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <title>BART – Modo Arcade</title>
-
-  <!-- Librerías -->
   <script src="src/jquery-3.0.0.min.js"></script>
   <script src="src/jcanvas.min.js"></script>
   <script src="src/jquery.bart.js"></script>
   <link rel="stylesheet" href="src/jquery.bart.css" />
-
-  <!-- Fuente arcade -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
-  <!-- Estilo arcade -->
   <style>
     body {
       background: radial-gradient(#1a1a1a, #000000);
@@ -23,8 +18,7 @@
       padding: 0;
       text-align: center;
     }
-
-    #intro, #final {
+    #intro {
       max-width: 700px;
       margin: 80px auto;
       padding: 40px;
@@ -33,12 +27,6 @@
       border-radius: 12px;
       box-shadow: 0 0 20px #00ffcc;
     }
-
-    h1, p {
-      color: #00ffcc;
-      margin-bottom: 20px;
-    }
-
     input[type="text"] {
       padding: 14px;
       width: 80%;
@@ -50,7 +38,6 @@
       border-radius: 6px;
       font-family: 'Press Start 2P', monospace;
     }
-
     button {
       background-color: #ff00cc;
       color: white;
@@ -63,54 +50,11 @@
       cursor: pointer;
       text-transform: uppercase;
       box-shadow: 0 0 12px #ff00cc;
-      transition: transform 0.2s, box-shadow 0.2s;
     }
-
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #ff00cc;
-    }
-
-    #bart {
-      margin: 40px auto;
-      max-width: 700px;
-      text-align: center;
-    }
-
-    canvas {
-      background-color: #000 !important;
-      border: 2px solid #00ffcc;
-      border-radius: 10px;
-      box-shadow: 0 0 12px #00ffcc;
-    }
-
-    .BARTinflate, .BARTcashin, .BARTnext {
-      background-color: #00ccff;
-      color: #000;
-      border: none;
-      font-size: 12px;
-      font-family: 'Press Start 2P', monospace;
-      padding: 12px 20px;
-      margin: 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      text-transform: uppercase;
-      box-shadow: 0 0 12px #00ccff;
-    }
-
-    .BARTinflate:hover, .BARTcashin:hover, .BARTnext:hover {
-      background-color: #00ffff;
-      box-shadow: 0 0 20px #00ffff;
-    }
-
-    .BARTbottom {
-      padding-top: 20px;
-    }
+    #bart { margin: 40px auto; max-width: 700px; text-align: center; }
   </style>
-
   <script>
     let userID = "";
-
     $(document).ready(function () {
       $("#start_btn").click(function () {
         userID = $("#user_id").val().trim();
@@ -118,55 +62,33 @@
           alert("🚨 Ingresá un correo o ID para continuar.");
           return;
         }
-
         $("#intro").hide();
         $("#bart").show();
-
         $("#bart").bart({
           b: 5,
           s: {
             user_id: userID,
-            bgcol: "#000000",
-            txt_cashin: "💰 COBRAR 💰",
             txt_inflate: "INFLAR GLOBO",
+            txt_cashin: "💰 COBRAR 💰",
             txt_next: "SIGUIENTE",
             txt_balloon_number: "Globo número: ",
             txt_number_of_pumps: "N° de infladas: ",
             txt_current_earned: "Ganancia actual: ",
             txt_total_earned: "Total acumulado: ",
-            txt_prob_explosion: "Probabilidad de explosión:",
-            txt_pumps_used: "Infladas usadas:",
-            txtEnd: "Gracias por participar 🎉",
-            onload: function () {
-              setTimeout(() => {
-                ["balnum", "pumpnum", "curearn", "totearn", "popprob", "pumuse"].forEach(layer => {
-                  $("#bart canvas").setLayer(layer, {
-                    fillStyle: "#00ffcc"
-                  }).drawLayers();
-                });
-              }, 100);
-            }
+            txtEnd: "¡Gracias por participar!"
           }
         });
       });
     });
   </script>
 </head>
-
 <body>
-
-  <!-- Pantalla inicial -->
   <div id="intro">
     <h1>🕹️ BART – Modo Arcade</h1>
-    <p>Inflá el globo para ganar puntos. Pero si explota... ¡perdés lo acumulado!</p>
-    <p>Ingresá tu correo electrónico o un ID único para comenzar:</p>
-    <input type="text" id="user_id" placeholder="Correo electrónico o ID" /><br />
+    <p>Ingresá tu correo electrónico o ID único para comenzar:</p>
+    <input type="text" id="user_id" placeholder="Correo o ID" /><br />
     <button id="start_btn">Comenzar</button>
   </div>
-
-  <!-- Contenedor del experimento -->
   <div id="bart" style="display: none;"></div>
-
 </body>
 </html>
-
